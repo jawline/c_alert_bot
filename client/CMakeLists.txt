@@ -20,7 +20,13 @@ SET(DEPENDENTS "libcurl json-c telebot")
 INCLUDE(FindPkgConfig)
 pkg_check_modules(PKGS REQUIRED ${DEPENDENTS})
 
+SET(EXTRA_LIB_CLFAGS "${EXTRA_LIB_CFLAGS}")
+
 FOREACH(flag ${PKGS_CFLAGS})
     SET(EXTRA_LIB_CFLAGS "${EXTRA_LIB_CFLAGS} ${flag}")
 ENDFOREACH(flag)
+
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_LIB_CFLAGS} -Werror -Wall -Wno-unused-function" )
+
+ADD_EXECUTABLE(alertbot ${SRCS})
+TARGET_LINK_LIBRARIES(alertbot ${PKGS_LDFLAGS} telebot pthread)

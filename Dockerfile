@@ -5,19 +5,14 @@ RUN apt-get --assume-yes install pkg-config libcurl4-openssl-dev libjson-c-dev c
 #Build the telegram bot library
 COPY ./telebot/ /telebot/
 WORKDIR /telebot/
-RUN mkdir -p Build 
-WORKDIR /telebot/Build
-RUN cmake ../
+RUN cmake .
 RUN make
+#RUN rm /telebot/*.in
 RUN make install
-
-ENV C_INCLUDE_PATH=${C_INCLUDE_PATH}:/telebot/Build/include/
-ENV LD_PATH=${LD_PATH}:/telebot/Build/
 
 COPY ./client/ /teleclient/
-WORKDIR ./teleclient/
-RUN mkdir -p Build
-WORKDIR /teleclient/Build
-RUN cmake ../
+WORKDIR /teleclient/
+RUN cmake ./
 RUN make
-RUN make install
+ENV LD_LIBRARY_PATH=/telebot/
+CMD /teleclient/alertbot
